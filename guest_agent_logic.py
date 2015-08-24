@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# @@@-*- coding: utf8-*-@@@
+# coding: utf8
 #########################################
 # @author yippee
 # @date 2015-07-17
@@ -28,6 +28,7 @@ except ImportError:
     class MultiProcessingFake:
         def cpu_count(self):
             return -1
+
 
     multiproc = MultiProcessingFake()
 

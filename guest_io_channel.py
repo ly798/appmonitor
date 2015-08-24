@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# @@@-*- coding: utf8-*-@@@
+# coding: utf8
 #########################################
 # @author yippee
 # @date 2015-07-17
@@ -18,6 +18,7 @@ import time
 import json
 import locale
 import unicodedata
+
 
 # avoid pep8 warnings
 def import_json():

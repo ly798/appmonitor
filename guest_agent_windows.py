@@ -28,7 +28,6 @@ class CommandHandlerWindows:
     def __init__(self, agent):
         self.agent = agent
 
-
     def execute_command(self, cmd):
         # {"__name__":"execute_command","cmd":"ps aux|awk '{print $11}'"}
         r = os.popen(cmd).read()
@@ -66,7 +65,6 @@ class WindowsDataRetriver(DataRetriverBase):
 
     def getMachineName(self):
         return socket.getfqdn()
-
 
     def getOsInfo(self):
         import platform
