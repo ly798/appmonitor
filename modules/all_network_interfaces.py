@@ -7,6 +7,7 @@ class AllNetworkInterfaces(object):
         self.name = 'all_network_interfaces'
 
     def get_result(self):
+
         try:
             nicmgr = NicMgr()
         except NotImplementedError:
