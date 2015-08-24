@@ -67,10 +67,9 @@ if __name__ == '__main__':
     ########### win
 
     ########### linux
-    # /var/lib/libvirt/qemu/com.eayun.eayunstack.0.137e9287-743c-4b79-9c7c-6d6b5d0a79cf.sock
-    # print SocketIoChannel(cmd='{"operation":"echo","cmd":"dir"}\n').get_result()
-    print SocketIoChannel(cmd='{"operation":"eho","cmd":"dir"aa}\n\r', server_address='/tmp/xp.qga.sock').get_result()
-    print SocketIoChannel(cmd='{"operation":"echo","cmd":"dir"}\n\r', server_address='/tmp/xp.qga.sock').get_result()
-    # print SocketIoChannel(
-    #    server_address='/var/lib/libvirt/qemu/com.eayun.eayunstack.0.137e9287-743c-4b79-9c7c-6d6b5d0a79cf.sock', \
-    #    cmd='{"operation":"echo","cmd":"dir"}\n').get_result()
+    # print SocketIoChannel(cmd='{"operation":"eho","cmd":"dir"aa}\n\r', server_address='/tmp/xp.qga.sock').get_result()
+    import sys
+
+    server_address = '/tmp/xp.qga.sock'
+    cmd = '{"operation":"execute_command","cmd":"%s"}\n\r' % sys.agrv[2]
+    print SocketIoChannel(cmd=cmd, server_address=server_address).get_result()
