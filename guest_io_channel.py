@@ -154,12 +154,12 @@ class VirtIoChannel:
             time.sleep(1)
 
     def _readline(self):
-        newline = self._buffer.find('\n')
+        newline = self._buffer.find('\n\r')
         while newline < 0:
             self._readbuffer()
-            newline = self._buffer.find('\n')
+            newline = self._buffer.find('\n\r')
         if newline >= 0:
-            line, self._buffer = self._buffer.split('\n', 1)
+            line, self._buffer = self._buffer.split('\n\r', 1)
         else:
             line = None
         return line
@@ -186,7 +186,7 @@ class VirtIoChannel:
         args = _filter_object(args)
         message = (json.dumps(args) + '\n').encode('utf8')
         while len(message) > 0:
-            written = self._stream.write('%s##end_flag##' % message)
+            written = self._stream.write('%s\n\r' % message)
             message = message[written:]
 
 
