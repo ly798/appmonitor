@@ -70,6 +70,6 @@ if __name__ == '__main__':
     # print SocketIoChannel(cmd='{"operation":"eho","cmd":"dir"aa}\n\r', server_address='/tmp/xp.qga.sock').get_result()
     import sys
 
-    server_address = '/tmp/xp.qga.sock'
+    server_address = '/var/lib/libvirt/qemu/com.eayun.eayunstack.0.6e4c4a95-329e-4859-a622-9d8865364a0a.sock'
     cmd = '{"operation":"execute_command","cmd":"%s"}\n\r' % sys.agrv[2]
     print SocketIoChannel(cmd=cmd, server_address=server_address).get_result()
