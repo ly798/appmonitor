@@ -57,7 +57,7 @@ class AllNetworkInterfaces(object):
                             mes['inet6'] = inet6
 
                     if inet4s:
-                        mes['inet4'] = inet4s
+                        mes['inet4'] = inet4
                     dev.append(mes)
             return dev
         else:
@@ -68,3 +68,9 @@ class AllNetworkInterfaces(object):
 
 def module():
     return AllNetworkInterfaces()
+
+
+if __name__ == '__main__':
+    import pprint
+    i = AllNetworkInterfaces()
+    pprint.pprint(i.get_result())
