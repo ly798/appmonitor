@@ -9,9 +9,7 @@ class SocketIoChannel:
     def __init__(self, cmd, server_address='/tmp/qga.sock'):
         self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.server_address = server_address
-
         self.sock.connect(self.server_address)
-
         self.cmd = cmd
         self._buf = ''
 
