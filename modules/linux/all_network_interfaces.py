@@ -3,6 +3,7 @@
 import commands
 
 
+
 class AllNetworkInterfaces(object):
     def __init__(self):
         self.name = 'all_network_interfaces'
