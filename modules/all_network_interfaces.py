@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # coding: utf8
+from guest_agent_linux import NicMgr
+import commands
 
 
 class AllNetworkInterfaces(object):
