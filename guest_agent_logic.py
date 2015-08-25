@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf8
 #########################################
-# @author yippee
-# @date 2015-07-17
-#########################################
 #
 # class DataRetriverBase:
 # 数据收集基类，定义了收集各类数据的方法
@@ -14,81 +11,12 @@
 
 import thread
 from threading import Event
-import socket
 import platform
+import os
+import importlib
+import re
 
 from guest_io_channel import VirtIoChannel
-
-multiproc = None
-try:
-    import multiprocessing
-
-    multiproc = multiprocessing
-except ImportError:
-    class MultiProcessingFake:
-        def cpu_count(self):
-            return -1
-
-
-    multiproc = MultiProcessingFake()
-
-
-class DataRetriverBase:
-    def __init__(self):
-        self.memStats = {
-            'mem_total': 0,
-            'mem_free': 0,
-            'mem_unused': 0,
-            'swap_in': 0,
-            'swap_out': 0,
-            'pageflt': 0,
-            'majflt': 0}
-
-    def getMachineName(self):
-        pass
-
-    def getOsVersion(self):
-        pass
-
-    def getAllNetworkInterfaces(self):
-        pass
-
-    def getApplications(self):
-        pass
-
-    def getAvailableRAM(self):
-        pass
-
-    def getUsers(self):
-        pass
-
-    def getActiveUser(self):
-        pass
-
-    def getDisksUsage(self):
-        pass
-
-    def getDiskMapping(self):
-        pass
-
-    def getMemoryStats(self):
-        pass
-
-    def getFQDN(self):
-        return socket.getfqdn()
-
-    def getOsInfo(self):
-        pass
-
-    def getNumberOfCPUs(self):
-        try:
-            return multiproc.cpu_count()
-        except NotImplementedError:
-            return -1
-
-    def getTimezoneInfo(self):
-        pass
-        # return timezone.get_timezone_info()
 
 
 class AgentLogicBase:
@@ -99,7 +27,9 @@ class AgentLogicBase:
         else:
             vport_name = '/dev/virtio-ports/com.eayun.eayunstack.0'
         self.vio = VirtIoChannel(vport_name)
-        self.commandHandler = None
+        self.modules = []
+        self.module_root_path = None
+        self.register_module()
 
     def _send(self, name, arguments=None):
         self.vio.write(name, arguments or {})
@@ -113,45 +43,37 @@ class AgentLogicBase:
         self.wait_stop.set()
 
     def doListen(self):
-        if self.commandHandler is None:
-            return
         while not self.wait_stop.isSet():
             try:
                 cmd, args = self.vio.read()
                 if cmd:
                     self.parseCommand(cmd, args)
-            except:
-                pass
+            except Exception as e:
+                raise
+
+    def register_module(self):
+        sys_plat = platform.system().lower()
+        our_dir = 'modules/%s' % sys_plat
+        dirpath, dirnames, filenames = os.walk(our_dir).next()
+        for fname in filenames:
+            root, ext = os.path.splitext(fname)
+            if ext != '.py' or root == '__init__':
+                continue
+            self.modules.append(root)
+        self.module_root_path = re.sub('/', '.', our_dir)
 
     def parseCommand(self, command, args):
         if command == 'get_infomation':
             name = args.get('name')
-            result = self.commandHandler.get_infomation(name)
-            self._send('get_infomation', {'result': result})
-
-        elif command == 'execute_script':
-            path = args.get('path')
-            type = args.get('type')
-            result = self.commandHandler.execute_script(path, type)
-            self._send('execute_script', {'result': result})
-
-        elif command == 'execute_command':
-            cmd = args.get('cmd')
-            try:
-                result = self.commandHandler.execute_command(cmd)
-                self._send('execute_command', {'result': result})
-            except:
-                self._send('execute_command', {'result': '0e0r0r0o0r1'})
-
+            if name in self.modules:
+                m = importlib.import_module('%s,%s' % (self.module_root_path, name))
+                result = m.module().get_result()
+                self._send('get_infomation', {'result': result})
         elif command == 'echo':
             self._send('echo', args)
-
         else:
             self._send(command, {'result': '0e0r0r0o0r0'})
 
 
 if __name__ == '__main__':
-    from guest_agent_linux import LinuxVdsAgent
-
-    agent = LinuxVdsAgent()
-    agent.run()
+    pass

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # @@@-*- coding: utf8-*-@@@
 #########################################
-# @author yippee
-# @date 2015-07-17
-#########################################
 #
 # class LinuxDataRetriver(DataRetriverBase):
 # 数据收集的实现类

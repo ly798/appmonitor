@@ -71,5 +71,5 @@ if __name__ == '__main__':
     import sys
 
     server_address = '/var/lib/libvirt/qemu/com.eayun.eayunstack.0.6e4c4a95-329e-4859-a622-9d8865364a0a.sock'
-    cmd = '{"operation":"execute_command","cmd":"%s"}\n\r' % sys.agrv[1]
+    cmd = '{"operation":"get_infomation","cmd":"%s"}\n\r' % sys.agrv[1]
     print SocketIoChannel(cmd=cmd, server_address=server_address).get_result()

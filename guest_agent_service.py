@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 # coding: utf8
 #########################################
-# @author yippee
-# @date 2015-07-17
-#########################################
 # 包括一个运行在虚拟机上的代理程序，一个宿主机上的管理辅助程序。
 # 最终目的是可以实现更加详细的监控虚拟机的运行情况，并能够做成ceilometer的扩展项。
 # 客户机代理通过虚拟的串口设备被kvm暴露出去，kvm监控程序与其进行沟通。
 #########################################
 import platform
-import logging
 import os
 import sys
 import time
 import atexit
 from signal import SIGTERM
+from guest_agent_logic import AgentLogicBase
 
 
 def platform_test():
@@ -34,15 +31,7 @@ def platform_test():
 
 
 def server():
-    agent = None
-    if platform.system() == 'Linux':
-        from guest_agent_linux import LinuxVdsAgent
-
-        agent = LinuxVdsAgent()
-    else:
-        from guest_agent_windows import WindowsVdsAgent
-
-        agent = WindowsVdsAgent()
+    agent = AgentLogicBase()
     agent.run()
 
 

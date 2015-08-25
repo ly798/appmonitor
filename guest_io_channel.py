@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf8
 #########################################
-# @author yippee
-# @date 2015-07-17
-#########################################
 #
 # class VirtIoStream(object):
 # io流类，包含基本的读写读写方法
@@ -189,39 +186,3 @@ class VirtIoChannel:
         while len(message) > 0:
             written = self._stream.write('%s\n\r' % message)
             message = message[written:]
-
-
-def _create_vio():
-    if (platform.system() == 'Windows') or (platform.system() == 'Microsoft'):
-        vport_name = '\\\\.\\Global\\org.qemu.guest_agent.0'
-    else:
-        vport_name = '/dev/virtio-ports/org.qemu.guest_agent.0'
-    return VirtIoChannel(vport_name)
-
-
-def _test_write():
-    vio = _create_vio()
-    vio.write('network-interfaces',
-              {'interfaces': [{
-                  'name': 'eth0',
-                  'inet': ['10.0.0.2'],
-                  'inet6': ['fe80::213:20ff:fef5:f9d6'],
-                  'hw': '00:1a:4a:23:10:00'}]})
-    vio.write('applications', {'applications': ['kernel-2.6.32-131.4.1.el6',
-                                                'rhev-agent-2.3.11-1.el6']})
-
-
-def _test_read():
-    # '{"operation":"test","abc":"123"}'
-    vio = _create_vio()
-    line = vio.read()
-    while line:
-        print line
-        line = vio.read()
-    from guest_agent_linux import LinuxDataRetriver
-
-    vio.write(LinuxDataRetriver().getOsInfo())
-
-
-if __name__ == "__main__":
-    _test_write()
