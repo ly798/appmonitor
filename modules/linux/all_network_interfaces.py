@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding: utf8
-from guest_agent_linux import NicMgr
 import commands
 
 
@@ -70,7 +69,52 @@ def module():
     return AllNetworkInterfaces()
 
 
+class NicMgr(object):
+    def __init__(self):
+        try:
+            import ethtool
+        except ImportError:
+            raise NotImplementedError
+        self.ethtool = ethtool
+        self.list_nics = self.ethtool_list_nics
+
+    def _get_ipv4_addresses(self, dev):
+        if hasattr(dev, 'get_ipv4_addresses'):
+            ipv4_addrs = []
+            for ip in dev.get_ipv4_addresses():
+                ipv4_addrs.append(ip.address)
+            return ipv4_addrs
+        if dev.ipv4_address is not None:
+            return [dev.ipv4_address]
+        else:
+            return []
+
+    def _get_ipv6_addresses(self, dev):
+        ipv6_addrs = []
+        for ip in dev.get_ipv6_addresses():
+            ipv6_addrs.append(ip.address)
+        return ipv6_addrs
+
+    def ethtool_list_nics(self):
+        interfaces = list()
+        try:
+            for dev in self.ethtool.get_devices():
+                flags = self.ethtool.get_flags(dev)
+                if flags & self.ethtool.IFF_UP and \
+                        not (flags & self.ethtool.IFF_LOOPBACK):
+                    devinfo = self.ethtool.get_interfaces_info(dev)[0]
+                    interfaces.append(
+                        {'name': dev,
+                         'inet': self._get_ipv4_addresses(devinfo),
+                         'inet6': self._get_ipv6_addresses(devinfo),
+                         'hw': self.ethtool.get_hwaddr(dev)})
+        except:
+            pass
+        return interfaces
+
+
 if __name__ == '__main__':
     import pprint
+
     i = AllNetworkInterfaces()
     pprint.pprint(i.get_result())
