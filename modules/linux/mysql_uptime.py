@@ -13,8 +13,7 @@ class MysqlUptime(object):
         m = re.search('\s(\d+)\s', o)
         if hasattr(m, 'group'):
             uptime = m.group(1)
-            result = uptime
-        return result
+            return uptime
 
 
 def module():

@@ -66,7 +66,7 @@ class AgentLogicBase:
         if command == 'get_infomation':
             name = args.get('name')
             if name in self.modules:
-                m = importlib.import_module('%s,%s' % (self.module_root_path, name))
+                m = importlib.import_module('%s.%s' % (self.module_root_path, name))
                 result = m.module().get_result()
                 self._send('get_infomation', {'result': result})
         elif command == 'echo':
