@@ -36,9 +36,9 @@ class AgentLogicBase:
     def doListen(self):
         while not self.wait_stop.isSet():
             try:
-                cmd, args = self.vio.read()
+                cmd, args, attr = self.vio.read()
                 if cmd:
-                    self.parseCommand(cmd, args)
+                    self.parseCommand(cmd, args, attr)
             except Exception as e:
                 raise
 
@@ -53,12 +53,12 @@ class AgentLogicBase:
             self.modules.append(root)
         self.module_root_path = re.sub('/', '.', our_dir)
 
-    def parseCommand(self, command, args):
+    def parseCommand(self, command, args, attr):
         if command == 'get_infomation':
             name = args.get('name')
             if name in self.modules:
                 m = importlib.import_module('%s.%s' % (self.module_root_path, name))
-                result = m.module().get_result()
+                result = m.module().get_result(attr)
                 self._send('get_infomation', {'result': result})
         elif command == 'echo':
             self._send('echo', args)

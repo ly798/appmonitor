@@ -56,7 +56,7 @@ class AllNetworkInterfaces(object):
                             mes['inet6'] = inet6
 
                     if inet4s:
-                        mes['inet4'] = inet4
+                        mes['inet4'] = inet4s
                     dev.append(mes)
             return dev
         else:

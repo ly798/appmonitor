@@ -157,11 +157,14 @@ class VirtIoChannel:
         try:
             args = json.loads(line.decode('utf8'))
             name = args['operation']
+            attr = args['attr']
             del args['operation']
+            del args['attr']
         except:
             name = None
             args = None
-        return (name, args)
+            attr = None
+        return (name, args, attr)
 
     def read(self):
         return self._parseLine(self._readline())

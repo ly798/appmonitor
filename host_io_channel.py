@@ -70,6 +70,9 @@ class SocketIoChannel:
 if __name__ == '__main__':
     # win
     # linux
+    username = 'root'
+    password = 'abc123'
     server_address = '/var/lib/libvirt/qemu/com.eayun.eayunstack.0.6e4c4a95-329e-4859-a622-9d8865364a0a.sock'
-    cmd = '{"operation":"get_infomation","name":"mysql_uptime"}\n\r'
+    cmd = '{"operation":"get_infomation","name":"mysql_uptime","attr":{"username":"%s","password":"%s"}}\n\r' % (
+        username, password)
     print SocketIoChannel(cmd=cmd, server_address=server_address).get_result()
