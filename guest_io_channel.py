@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # coding: utf8
-#########################################
-#
-# class VirtIoStream(object):
-# io流类，包含基本的读写读写方法
-
-# class VirtIoChannel:
-# io通道，封装VirtIoStream中的读写方法
-#########################################
-
 import platform
 import os
 import time

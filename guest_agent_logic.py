@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # coding: utf8
-#########################################
-#
-# class DataRetriverBase:
-# 数据收集基类，定义了收集各类数据的方法
-#
-# class AgentLogicBase:
-# 即插件的逻辑启动流程，主要是方法run、stop
-#########################################
-
 import thread
 from threading import Event
 import platform

@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # coding: utf8
-#########################################
 import socket
 import time
+import signal
+
+
+# Define signal handler function
+def TimeOutHandler(signum, frame):
+    raise Exception
 
 
 class SocketIoChannel:
@@ -34,13 +39,16 @@ class SocketIoChannel:
     def read(self):
         return self._readline()
 
-    def return_result(self, time_out=3):
+    def return_result(self):
         # time_out: get result timeout
         try:
+            # register signal.SIGALRM's handler
+            signal.signal(signal.SIGALRM, TimeOutHandler)
+            signal.alarm(3)
             self.sock.send(self.cmd)
             result = self.read()
-        except AssertionError:
-            raise AssertionError
+        except Exception:
+            raise
         finally:
             self.sock.close()
 
@@ -49,10 +57,10 @@ class SocketIoChannel:
         else:
             raise Exception('Unknow Error')
 
-    def get_result(self, time_out=2):
+    def get_result(self):
         # time_out: get result timeout
         try:
-            _str = self.return_result(time_out)
+            _str = self.return_result()
             _tmp_str = _str[_str.index(',') + 1:].strip()
             result = _tmp_str[_tmp_str.index(':') + 1:].strip()[:-1]
             return result

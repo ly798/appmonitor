@@ -1,38 +1,11 @@
 #!/usr/bin/env python
 # coding: utf8
-#########################################
-# 包括一个运行在虚拟机上的代理程序，一个宿主机上的管理辅助程序。
-# 最终目的是可以实现更加详细的监控虚拟机的运行情况，并能够做成ceilometer的扩展项。
-# 客户机代理通过虚拟的串口设备被kvm暴露出去，kvm监控程序与其进行沟通。
-#########################################
-import platform
 import os
 import sys
 import time
 import atexit
 from signal import SIGTERM
 from guest_agent_logic import AgentLogicBase
-
-
-def platform_test():
-    print '操作系统类型：', platform.system()
-    if platform.system() == "Linux":
-        print 'Linux发行版本：', platform.linux_distribution()
-    print '操作系统版本：', platform.version()
-    print '操作系统信息：', platform.uname()
-    print '操作系统的发行版号：', platform.release()
-    print '主机的硬件(CPU)名：', platform.machine()
-    print '处理器类型：', platform.processor()
-    print '主机名称：', platform.node()
-    try:
-        print 'python版本：', platform.python_version()
-    except Exception:
-        print '没有python.'
-
-
-def server():
-    agent = AgentLogicBase()
-    agent.run()
 
 
 class Daemon:
@@ -160,6 +133,11 @@ class Daemon:
         You should override this method when you subclass Daemon. It will be called after the process has been
         daemonized by start() or restart().
         """
+
+
+def server():
+    agent = AgentLogicBase()
+    agent.run()
 
 
 class OVirtDaemon(Daemon):
