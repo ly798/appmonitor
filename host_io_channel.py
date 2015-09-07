@@ -40,12 +40,11 @@ class SocketIoChannel:
         return self._readline()
 
     def return_result(self):
-        # time_out: get result timeout
+        self.sock.send(self.cmd)
         try:
             # register signal.SIGALRM's handler
-            signal.signal(signal.SIGALRM, TimeOutHandler)
-            signal.alarm(3)
-            self.sock.send(self.cmd)
+            # signal.signal(signal.SIGALRM, TimeOutHandler)
+            # signal.alarm(3)
             result = self.read()
         except Exception:
             raise
